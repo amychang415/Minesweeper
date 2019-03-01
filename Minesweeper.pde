@@ -33,18 +33,15 @@ public void setBombs()
     {
         int row = (int)(Math.random()*20);
         int col = (int)(Math.random()*20);
-        MSButton datAss = new MSButton(row, col); 
-
-        if (!bombs.contains(datAss))
+        if (!bombs.contains(buttons[row][col]))
         {
-            bombs.add(datAss);
+            bombs.add(buttons[row][col]);
         }
     }
 }
 
 public void draw ()
 {
-    background( 0 );
     if(isWon())
         displayWinningMessage();
 }
@@ -55,7 +52,9 @@ public boolean isWon()
 }
 public void displayLosingMessage()
 {
-    System.out.println("die");
+
+    lost = true;
+
 }
 public void displayWinningMessage()
 {
@@ -64,6 +63,7 @@ public void displayWinningMessage()
 
 public class MSButton
 {
+    private boolean lost;
     private int r, c;
     private float x,y, width, height;
     private boolean clicked, marked;
@@ -71,6 +71,7 @@ public class MSButton
     
     public MSButton ( int rr, int cc )
     {
+        lost = false;
         width = 400/NUM_COLS;
         height = 400/NUM_ROWS;
         r = rr;
@@ -93,27 +94,30 @@ public class MSButton
     
     public void mousePressed () 
     {
+        clicked = true;
         if (mouseButton == RIGHT)
         {
             marked = !marked;
+            if (marked == false)
+            {
+                clicked = false;
+            }
         }
-        else
-        {
-            clicked = true;
-        }
+
         if (bombs.contains(this))
         {
             displayLosingMessage();
         }
-             else if (countBombs(this.r,this.c)>0)
+             else if (countBombs(r,c)>0)
              {
-                setLabel(""+countBombs(this.r,this.c));
+                setLabel(""+countBombs(r,c));
              }
-                else if (countBombs(this.r,this.c) == 0)
+                else if (countBombs(r,c) == 0)
                 {
-                    for(int x = this.r-1; x <= this.r+1; x++)
+                    System.out.println("for1");
+                    for(int x = r-1; x <= r+1; x++)
                     {
-                        for(int y = this.c-1; x<=this.c+1; y++)
+                        for(int y = c-1; y<=c+1; y++)
                         {
                             if (isValid(x,y) &&  !buttons[x][y].isClicked())
                             {
@@ -138,14 +142,21 @@ public class MSButton
         rect(x, y, width, height);
         fill(0);
         text(label,x+width/2,y+height/2);
+
+
+        if(lost)
+        {
+            text("You Lost", width/2,height/2);
+        }
     }
     public void setLabel(String newLabel)
     {
+        System.out.println("label");
         label = newLabel;
     }
     public boolean isValid(int r, int c)
     {
-        if (r<=NUM_ROWS && c<NUM_COLS && r >=0 && c>=0)
+        if (r<NUM_ROWS && c<NUM_COLS && r >=0 && c>=0)
             {
             return true;
             }
@@ -157,15 +168,14 @@ public class MSButton
       int z = 0;
         for(int x = row-1; x <= row+1; x++)
             {
-                for(int y = col-1; x<=col+1; y++)
+                for(int y = col-1; y<=col+1; y++)
                 {
-                    if (bombs.contains(buttons[x][y]))
+                    if (isValid(x,y) && bombs.contains(buttons[x][y]))
                     {
                         z++;
                     }
                 }
             }
-                  System.out.println("help");
         System.out.println(z);
       return z;
 
