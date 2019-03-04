@@ -6,7 +6,7 @@ public static int NUM_COLS = 20;
 public static int NUM_BOMBS = 50;
 private MSButton[][] buttons = new MSButton[NUM_ROWS][NUM_COLS]; //2d array of minesweeper buttons
 private ArrayList <MSButton> bombs = new ArrayList <MSButton>(); //ArrayList of just the minesweeper buttons that are mined
-
+   private boolean lost;
 
 void setup ()
 {
@@ -63,7 +63,7 @@ public void displayWinningMessage()
 
 public class MSButton
 {
-    private boolean lost;
+ 
     private int r, c;
     private float x,y, width, height;
     private boolean clicked, marked;
@@ -104,7 +104,7 @@ public class MSButton
             }
         }
 
-        if (bombs.contains(this))
+        else if (bombs.contains(this))
         {
             displayLosingMessage();
         }
@@ -129,7 +129,8 @@ public class MSButton
 }
 
     public void draw () 
-    {    
+    {   
+        textSize(10);
         if (marked)
             fill(0);
         else if( clicked && bombs.contains(this) ) 
@@ -146,7 +147,8 @@ public class MSButton
 
         if(lost)
         {
-            text("You Lost", width/2,height/2);
+            textSize(35);
+            text("You Lost", 400/2,400/2);
         }
     }
     public void setLabel(String newLabel)
