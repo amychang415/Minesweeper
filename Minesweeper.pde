@@ -3,10 +3,12 @@
 import de.bezier.guido.*;
 public static int NUM_ROWS = 20;
 public static int NUM_COLS = 20;
-public static int NUM_BOMBS = 50;
+public static int NUM_BOMBS = 1;
 private MSButton[][] buttons = new MSButton[NUM_ROWS][NUM_COLS]; //2d array of minesweeper buttons
 private ArrayList <MSButton> bombs = new ArrayList <MSButton>(); //ArrayList of just the minesweeper buttons that are mined
-   private boolean lost;
+public boolean lost;
+public boolean won;
+
 
 void setup ()
 {
@@ -24,7 +26,8 @@ void setup ()
             buttons[r][c] = new MSButton(r,c);
         }
     }
-    
+    lost = false;
+    won = false;
     setBombs();
 }
 public void setBombs()
@@ -43,12 +46,21 @@ public void setBombs()
 public void draw ()
 {
     if(isWon())
-        displayWinningMessage();
+        won = true;
 }
 public boolean isWon()
 {
-    //your code here
-    return false;
+    for(int r = 0; r <= NUM_ROWS; r++)
+    {
+        for(int c = 0; c <= NUM_COLS; r++)
+        {
+            if (!bombs.contains(buttons[r][c]) && !buttons[r][c].isClicked())
+            {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 public void displayLosingMessage()
 {
@@ -56,14 +68,12 @@ public void displayLosingMessage()
     lost = true;
 
 }
-public void displayWinningMessage()
-{
-    //your code here
-}
+
 
 public class MSButton
 {
  
+
     private int r, c;
     private float x,y, width, height;
     private boolean clicked, marked;
@@ -71,7 +81,7 @@ public class MSButton
     
     public MSButton ( int rr, int cc )
     {
-        lost = false;
+       
         width = 400/NUM_COLS;
         height = 400/NUM_ROWS;
         r = rr;
@@ -94,6 +104,8 @@ public class MSButton
     
     public void mousePressed () 
     {
+        if (lost == false && won == false)
+        {
         clicked = true;
         if (mouseButton == RIGHT)
         {
@@ -114,7 +126,6 @@ public class MSButton
              }
                 else if (countBombs(r,c) == 0)
                 {
-                    System.out.println("for1");
                     for(int x = r-1; x <= r+1; x++)
                     {
                         for(int y = c-1; y<=c+1; y++)
@@ -126,6 +137,7 @@ public class MSButton
                         }
                     }
                 }
+    }
 }
 
     public void draw () 
@@ -149,6 +161,11 @@ public class MSButton
         {
             textSize(35);
             text("You Lost", 400/2,400/2);
+        }
+        if(won)
+        {
+            textSize(35);
+            text("You Won", 400/2,400/2);
         }
     }
     public void setLabel(String newLabel)
