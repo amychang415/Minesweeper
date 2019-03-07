@@ -3,7 +3,7 @@
 import de.bezier.guido.*;
 public static int NUM_ROWS = 20;
 public static int NUM_COLS = 20;
-public static int NUM_BOMBS = 1;
+public static int NUM_BOMBS = 50;
 private MSButton[][] buttons = new MSButton[NUM_ROWS][NUM_COLS]; //2d array of minesweeper buttons
 private ArrayList <MSButton> bombs = new ArrayList <MSButton>(); //ArrayList of just the minesweeper buttons that are mined
 public boolean lost;
@@ -50,10 +50,12 @@ public void draw ()
 }
 public boolean isWon()
 {
-    for(int r = 0; r <= NUM_ROWS; r++)
+    for(int r = 0; r < NUM_ROWS; r++)
     {
-        for(int c = 0; c <= NUM_COLS; r++)
+        for(int c = 0; c < NUM_COLS; c++)
         {
+            System.out.println(r);
+            System.out.println(c);
             if (!bombs.contains(buttons[r][c]) && !buttons[r][c].isClicked())
             {
                 return false;
@@ -107,16 +109,17 @@ public class MSButton
         if (lost == false && won == false)
         {
         clicked = true;
-        if (mouseButton == RIGHT)
+        if (mouseButton == RIGHT && clicked == false)
         {
             marked = !marked;
             if (marked == false)
             {
                 clicked = false;
             }
+
         }
 
-        else if (bombs.contains(this))
+        else if (bombs.contains(this) && marked == false)
         {
             displayLosingMessage();
         }
@@ -142,6 +145,7 @@ public class MSButton
 
     public void draw () 
     {   
+        textAlign(CENTER,CENTER);
         textSize(10);
         if (marked)
             fill(0);
@@ -159,18 +163,19 @@ public class MSButton
 
         if(lost)
         {
+            textAlign(CENTER);
             textSize(35);
             text("You Lost", 400/2,400/2);
         }
         if(won)
         {
+            textAlign(CENTER);
             textSize(35);
             text("You Won", 400/2,400/2);
         }
     }
     public void setLabel(String newLabel)
     {
-        System.out.println("label");
         label = newLabel;
     }
     public boolean isValid(int r, int c)
@@ -195,7 +200,7 @@ public class MSButton
                     }
                 }
             }
-        System.out.println(z);
+
       return z;
 
     }
