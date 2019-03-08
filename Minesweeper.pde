@@ -108,39 +108,39 @@ public class MSButton
     {
         if (lost == false && won == false)
         {
-        clicked = true;
         if (mouseButton == RIGHT && clicked == false)
         {
             marked = !marked;
-            if (marked == false)
-            {
-                clicked = false;
-            }
-
         }
 
-        else if (bombs.contains(this) && marked == false)
+        if (marked == false && mouseButton == LEFT)
         {
+            if (bombs.contains(this) && marked == false)
+            {
+            clicked = true;
             displayLosingMessage();
-        }
+            }
              else if (countBombs(r,c)>0)
              {
+                clicked = true;
                 setLabel(""+countBombs(r,c));
              }
                 else if (countBombs(r,c) == 0)
                 {
+                    clicked = true;
                     for(int x = r-1; x <= r+1; x++)
                     {
                         for(int y = c-1; y<=c+1; y++)
                         {
-                            if (isValid(x,y) &&  !buttons[x][y].isClicked())
+                            if (isValid(x,y) &&  !buttons[x][y].isClicked() && !buttons[x][y].isMarked())
                             {
                                     buttons[x][y].mousePressed();
                             }
                         }
                     }
                 }
-    }
+        }
+        }
 }
 
     public void draw () 
